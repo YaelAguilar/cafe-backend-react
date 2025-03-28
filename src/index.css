@@ -1,1 +1,78 @@
+/* stylelint-disable at-rule-no-unknown */
 @import "tailwindcss";
+
+:root {
+  --primary: #00a99d;
+  --primary-dark: #008c82;
+  --primary-light: #4dccc3;
+  --accent: #d62828;
+  --accent-dark: #b01e1e;
+  --accent-light: #e45858;
+  --secondary: #e63e6d;
+  --secondary-dark: #c92e59;
+  --secondary-light: #f06e93;
+  --gray-dark: #333333;
+  --gray: #666666;
+  --gray-light: #cccccc;
+  --gray-lighter: #f5f5f5;
+  --white: #ffffff;
+  --black: #000000;
+  --shadow: rgba(0, 0, 0, 0.1);
+}
+
+@layer base {
+  body {
+    @apply text-gray-800 bg-white;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+  }
+
+  a {
+    @apply text-teal-500 transition-colors duration-300;
+  }
+
+  a:hover {
+    @apply text-teal-600;
+  }
+}
+
+@layer components {
+  .container {
+    @apply max-w-7xl mx-auto px-4;
+  }
+
+  .btn {
+    @apply inline-block px-4 py-2 rounded font-semibold text-center cursor-pointer transition-all duration-300 border-none text-base;
+  }
+
+  .btn-primary {
+    @apply bg-teal-500 text-white hover:bg-teal-600;
+  }
+
+  .btn-outline {
+    @apply bg-transparent border-2 border-teal-500 text-teal-500 hover:bg-teal-500 hover:text-white;
+  }
+
+  .btn-large {
+    @apply px-6 py-3 text-lg;
+  }
+
+  .section-title {
+    @apply text-3xl md:text-4xl font-bold text-center text-gray-800 mb-8 relative pb-4;
+  }
+
+  .section-title::after {
+    content: "";
+    @apply absolute bottom-0 left-1/2 transform -translate-x-1/2 w-20 h-1 bg-teal-500 rounded;
+  }
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
