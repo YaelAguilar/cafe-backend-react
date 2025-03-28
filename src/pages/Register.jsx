@@ -17,7 +17,7 @@ function Register() {
   const handleSubmit = (e) => {
     e.preventDefault()
 
-    // Validación básica
+    // Validación básic
     if (password !== confirmPassword) {
       alert("Las contraseñas no coinciden")
       return
