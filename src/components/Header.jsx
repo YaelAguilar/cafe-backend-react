@@ -20,7 +20,7 @@ function Header() {
             alt="Logo"
             className="h-10 mr-2.5"
           />
-          <h1 className="text-2xl font-bold text-teal-500">CaféConnect</h1>
+          <h1 className="text-2xl font-bold text-teal-500">CaféCollect</h1>
         </div>
 
         <nav className="hidden md:block">
@@ -35,7 +35,7 @@ function Header() {
             </li>
             <li className="mx-4">
               <Link
-                to="/buscar"
+                to="/search"
                 className="text-gray-800 font-medium hover:text-teal-500 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-teal-500 hover:after:w-full after:transition-all"
               >
                 Buscar Proveedores
@@ -43,7 +43,7 @@ function Header() {
             </li>
             <li className="mx-4">
               <Link
-                to="/perfil"
+                to="/profile"
                 className="text-gray-800 font-medium hover:text-teal-500 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-teal-500 hover:after:w-full after:transition-all"
               >
                 Mi Perfil
@@ -51,7 +51,7 @@ function Header() {
             </li>
             <li className="mx-4">
               <Link
-                to="/mensajes"
+                to="/messages"
                 className="text-gray-800 font-medium hover:text-teal-500 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-teal-500 hover:after:w-full after:transition-all"
               >
                 Mensajes
@@ -97,17 +97,17 @@ function Header() {
               </Link>
             </li>
             <li className="py-2">
-              <Link to="/buscar" className="text-gray-800 font-medium hover:text-teal-500">
+              <Link to="/search" className="text-gray-800 font-medium hover:text-teal-500">
                 Buscar Proveedores
               </Link>
             </li>
             <li className="py-2">
-              <Link to="/perfil" className="text-gray-800 font-medium hover:text-teal-500">
+              <Link to="/profile" className="text-gray-800 font-medium hover:text-teal-500">
                 Mi Perfil
               </Link>
             </li>
             <li className="py-2">
-              <Link to="/mensajes" className="text-gray-800 font-medium hover:text-teal-500">
+              <Link to="/messages" className="text-gray-800 font-medium hover:text-teal-500">
                 Mensajes
               </Link>
             </li>

@@ -39,7 +39,7 @@ function FeaturesSection() {
     <section className="py-20 bg-white">
       <div className="container mx-auto px-5">
         <h2 className="text-4xl font-bold text-center text-gray-800 mb-12 relative pb-4 after:content-[''] after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-20 after:h-1 after:bg-teal-500 after:rounded">
-          ¿Por qué elegir CaféConnect?
+          ¿Por qué elegir CaféCollect?
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {features.map((feature, index) => (

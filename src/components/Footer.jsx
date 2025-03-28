@@ -13,7 +13,7 @@ function Footer() {
                 alt="Logo"
                 className="h-[50px] mr-2.5"
               />
-              <h2 className="text-2xl font-bold">CaféConnect</h2>
+              <h2 className="text-2xl font-bold">CaféCollect</h2>
             </div>
             <p className="text-gray-300">Conectando comerciantes con los mejores productores de café.</p>
           </div>
@@ -28,17 +28,17 @@ function Footer() {
                   </Link>
                 </li>
                 <li className="mb-3">
-                  <Link to="/buscar" className="text-gray-300 hover:text-teal-400 transition-colors">
+                  <Link to="/search" className="text-gray-300 hover:text-teal-400 transition-colors">
                     Buscar Proveedores
                   </Link>
                 </li>
                 <li className="mb-3">
-                  <Link to="/perfil" className="text-gray-300 hover:text-teal-400 transition-colors">
+                  <Link to="/profile" className="text-gray-300 hover:text-teal-400 transition-colors">
                     Mi Perfil
                   </Link>
                 </li>
                 <li className="mb-3">
-                  <Link to="/mensajes" className="text-gray-300 hover:text-teal-400 transition-colors">
+                  <Link to="/messages" className="text-gray-300 hover:text-teal-400 transition-colors">
                     Mensajes
                   </Link>
                 </li>
@@ -131,7 +131,7 @@ function Footer() {
         </div>
 
         <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-gray-700">
-          <p className="text-gray-300 mb-4 md:mb-0">&copy; 2025 CaféConnect. Todos los derechos reservados.</p>
+          <p className="text-gray-300 mb-4 md:mb-0">&copy; 2025 CaféCollect. Todos los derechos reservados.</p>
           <div className="flex gap-4">
             <Link
               to="#"

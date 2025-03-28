@@ -38,7 +38,7 @@ function Register() {
       {showAlert && (
         <CustomAlert
           title="Registro Exitoso"
-          message="¡Bienvenido a CaféConnect! Tu cuenta ha sido creada correctamente. Redirigiendo..."
+          message="¡Bienvenido a CaféCollect! Tu cuenta ha sido creada correctamente. Redirigiendo..."
           icon="check-circle"
           redirectUrl="/"
         />
@@ -52,7 +52,7 @@ function Register() {
               alt="Logo"
               className="h-[50px] mr-2.5"
             />
-            <h1 className="text-2xl font-bold text-teal-500">CaféConnect</h1>
+            <h1 className="text-2xl font-bold text-teal-500">CaféCollect</h1>
           </Link>
         </div>
 

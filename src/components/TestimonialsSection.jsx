@@ -8,7 +8,7 @@ function TestimonialsSection() {
   const testimonials = [
     {
       content:
-        "Gracias a CaféConnect hemos encontrado proveedores confiables que cumplen con nuestros estándares de calidad. El proceso de verificación nos da mucha tranquilidad.",
+        "Gracias a CaféCollect hemos encontrado proveedores confiables que cumplen con nuestros estándares de calidad. El proceso de verificación nos da mucha tranquilidad.",
       author: "Carlos Mendoza",
       company: "Cafetería El Aroma",
       image:
@@ -24,7 +24,7 @@ function TestimonialsSection() {
     },
     {
       content:
-        "Como tostadores, necesitábamos encontrar café de especialidad con características muy específicas. CaféConnect nos ha ayudado a encontrar exactamente lo que buscábamos.",
+        "Como tostadores, necesitábamos encontrar café de especialidad con características muy específicas. CaféCollect nos ha ayudado a encontrar exactamente lo que buscábamos.",
       author: "Miguel Ángel Rodríguez",
       company: "Tostadores Artesanales",
       image:

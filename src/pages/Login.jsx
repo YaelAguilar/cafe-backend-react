@@ -21,7 +21,7 @@ function Login() {
       {showAlert && (
         <CustomAlert
           title="Inicio de Sesión Exitoso"
-          message="Bienvenido de nuevo a CaféConnect. Redirigiendo..."
+          message="Bienvenido de nuevo a CaféCollect. Redirigiendo..."
           icon="check-circle"
           redirectUrl="/"
         />
@@ -35,7 +35,7 @@ function Login() {
               alt="Logo"
               className="h-[50px] mr-2.5"
             />
-            <h1 className="text-2xl font-bold text-teal-500">CaféConnect</h1>
+            <h1 className="text-2xl font-bold text-teal-500">CaféCollect</h1>
           </Link>
         </div>
 

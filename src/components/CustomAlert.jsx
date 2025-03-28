@@ -10,7 +10,7 @@ function CustomAlert({ title, message, icon, redirectUrl }) {
   const navigate = useNavigate()
 
   useEffect(() => {
-    // La alerta
+    // Mostrar la alerta
     setTimeout(() => {
       setIsActive(true)
       setProgressActive(true)
