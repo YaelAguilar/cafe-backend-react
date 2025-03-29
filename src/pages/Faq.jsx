@@ -11,19 +11,14 @@ function Faq() {
 
   const faqItems = [
     {
-      question: "¿Cómo funciona el proceso de verificación?",
+      question: "¿Cómo puedo editar mi perfil de productor?",
       answer:
-        "El proceso de verificación consta de 5 pasos: registro básico, documentación comercial, verificación de identidad, revisión final y obtención del perfil verificado. Cada paso requiere información específica que será validada por nuestro equipo.",
+        "Para editar tu perfil de productor, inicia sesión en tu cuenta, ve a la sección 'Mi Perfil' y haz clic en 'Editar Perfil'. Allí podrás actualizar tu información personal, detalles de producción, fotos, certificaciones y datos de contacto. Recuerda guardar los cambios al finalizar.",
     },
     {
-      question: "¿Qué documentos necesito para verificar mi negocio?",
+      question: "¿Cómo actualizo mi catálogo de productos?",
       answer:
-        "Necesitarás proporcionar documentos como: registro comercial, RFC, comprobante de domicilio comercial, identificación oficial del representante legal y, en algunos casos, referencias comerciales.",
-    },
-    {
-      question: "¿Cómo se garantiza la calidad de los proveedores?",
-      answer:
-        "Todos los proveedores pasan por un riguroso proceso de verificación similar al de los comerciantes. Además, contamos con un sistema de calificaciones y reseñas que permite a los usuarios compartir sus experiencias.",
+        "Para actualizar tu catálogo, dirígete a la sección 'Mi Perfil' y selecciona la pestaña 'Productos'. Allí podrás agregar nuevos productos, editar los existentes o eliminar aquellos que ya no ofreces. Puedes incluir fotos, descripciones detalladas, precios y disponibilidad.",
     },
     {
       question: "¿Cuánto tiempo toma el proceso de emparejamiento?",
@@ -31,9 +26,14 @@ function Faq() {
         "El sistema de emparejamiento es automático y muestra resultados inmediatos. Sin embargo, recomendamos dedicar tiempo a revisar los perfiles de los proveedores sugeridos para encontrar la mejor opción para tu negocio.",
     },
     {
+      question: "¿Cómo puedo destacar mi perfil entre otros productores?",
+      answer:
+        "Para destacar tu perfil, asegúrate de completar toda la información solicitada, incluir fotos de alta calidad de tus productos, detallar tus certificaciones, mantener actualizada tu disponibilidad y responder rápidamente a los mensajes. También puedes considerar suscribirte a nuestro plan Premium que ofrece mayor visibilidad.",
+    },
+    {
       question: "¿La plataforma cobra comisión por las transacciones?",
       answer:
-        "No, CaféCollect no cobra comisión por las transacciones realizadas entre comerciantes y proveedores. Nuestro modelo de negocio se basa en suscripciones premium que ofrecen funcionalidades adicionales.",
+        "No, CaféConnect no cobra comisión por las transacciones realizadas entre comerciantes y proveedores. Nuestro modelo de negocio se basa en suscripciones premium que ofrecen funcionalidades adicionales.",
     },
   ]
 
