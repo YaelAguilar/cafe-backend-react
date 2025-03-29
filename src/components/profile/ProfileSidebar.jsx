@@ -30,12 +30,16 @@ function ProfileSidebar({ activeTab, onTabChange }) {
           <li key={tab.id} className="mb-2">
             <button
               onClick={() => onTabChange(tab.id)}
-              className={`w-full flex items-center gap-3 p-4 rounded-md transition-colors ${
+              className={`w-full text-left p-4 rounded-md transition-colors ${
                 activeTab === tab.id ? "bg-teal-500 text-white" : "text-gray-600 hover:bg-gray-200"
               }`}
             >
-              <tab.icon size={20} />
-              <span>{tab.label}</span>
+              <div className="grid grid-cols-[24px_1fr] items-center gap-3">
+                <div className="flex justify-center">
+                  <tab.icon size={20} />
+                </div>
+                <span className="leading-tight">{tab.label}</span>
+              </div>
             </button>
           </li>
         ))}
@@ -45,4 +49,3 @@ function ProfileSidebar({ activeTab, onTabChange }) {
 }
 
 export default ProfileSidebar
-
