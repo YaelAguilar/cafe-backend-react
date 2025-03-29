@@ -1,14 +1,20 @@
 "use client"
 
 import { useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
 import { Menu } from "lucide-react"
 
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const location = useLocation() // Obtener la ubicación actual
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen)
+  }
+
+  // Función para determinar si un link está activo
+  const isActive = (path) => {
+    return location.pathname === path
   }
 
   return (
@@ -20,7 +26,7 @@ function Header() {
             alt="Logo"
             className="h-10 mr-2.5"
           />
-          <h1 className="text-2xl font-bold text-teal-500">CaféCollect</h1>
+          <h1 className="text-2xl font-bold text-teal-500">CaféConnect</h1>
         </div>
 
         <nav className="hidden md:block">
@@ -28,7 +34,9 @@ function Header() {
             <li className="mx-4">
               <Link
                 to="/"
-                className="text-gray-800 font-medium hover:text-teal-500 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-full after:h-0.5 after:bg-teal-500"
+                className={`text-gray-800 font-medium hover:text-teal-500 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:h-0.5 after:bg-teal-500 after:transition-all ${
+                  isActive("/") ? "text-teal-500 after:w-full" : "after:w-0 hover:after:w-full"
+                }`}
               >
                 Inicio
               </Link>
@@ -36,7 +44,9 @@ function Header() {
             <li className="mx-4">
               <Link
                 to="/search"
-                className="text-gray-800 font-medium hover:text-teal-500 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-teal-500 hover:after:w-full after:transition-all"
+                className={`text-gray-800 font-medium hover:text-teal-500 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:h-0.5 after:bg-teal-500 after:transition-all ${
+                  isActive("/search") ? "text-teal-500 after:w-full" : "after:w-0 hover:after:w-full"
+                }`}
               >
                 Buscar Proveedores
               </Link>
@@ -44,7 +54,9 @@ function Header() {
             <li className="mx-4">
               <Link
                 to="/profile"
-                className="text-gray-800 font-medium hover:text-teal-500 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-teal-500 hover:after:w-full after:transition-all"
+                className={`text-gray-800 font-medium hover:text-teal-500 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:h-0.5 after:bg-teal-500 after:transition-all ${
+                  isActive("/profile") ? "text-teal-500 after:w-full" : "after:w-0 hover:after:w-full"
+                }`}
               >
                 Mi Perfil
               </Link>
@@ -52,7 +64,9 @@ function Header() {
             <li className="mx-4">
               <Link
                 to="/messages"
-                className="text-gray-800 font-medium hover:text-teal-500 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-teal-500 hover:after:w-full after:transition-all"
+                className={`text-gray-800 font-medium hover:text-teal-500 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:h-0.5 after:bg-teal-500 after:transition-all ${
+                  isActive("/messages") ? "text-teal-500 after:w-full" : "after:w-0 hover:after:w-full"
+                }`}
               >
                 Mensajes
               </Link>
@@ -60,7 +74,9 @@ function Header() {
             <li className="mx-4">
               <Link
                 to="/faq"
-                className="text-gray-800 font-medium hover:text-teal-500 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:bg-teal-500 hover:after:w-full after:transition-all"
+                className={`text-gray-800 font-medium hover:text-teal-500 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:h-0.5 after:bg-teal-500 after:transition-all ${
+                  isActive("/faq") ? "text-teal-500 after:w-full" : "after:w-0 hover:after:w-full"
+                }`}
               >
                 FAQ
               </Link>
@@ -92,27 +108,42 @@ function Header() {
         <div className="md:hidden">
           <ul className="flex flex-col absolute top-[80px] left-0 w-full bg-white p-4 shadow-md z-50">
             <li className="py-2">
-              <Link to="/" className="text-gray-800 font-medium hover:text-teal-500">
+              <Link
+                to="/"
+                className={`text-gray-800 font-medium hover:text-teal-500 ${isActive("/") ? "text-teal-500" : ""}`}
+              >
                 Inicio
               </Link>
             </li>
             <li className="py-2">
-              <Link to="/search" className="text-gray-800 font-medium hover:text-teal-500">
+              <Link
+                to="/search"
+                className={`text-gray-800 font-medium hover:text-teal-500 ${isActive("/search") ? "text-teal-500" : ""}`}
+              >
                 Buscar Proveedores
               </Link>
             </li>
             <li className="py-2">
-              <Link to="/profile" className="text-gray-800 font-medium hover:text-teal-500">
+              <Link
+                to="/profile"
+                className={`text-gray-800 font-medium hover:text-teal-500 ${isActive("/profile") ? "text-teal-500" : ""}`}
+              >
                 Mi Perfil
               </Link>
             </li>
             <li className="py-2">
-              <Link to="/messages" className="text-gray-800 font-medium hover:text-teal-500">
+              <Link
+                to="/messages"
+                className={`text-gray-800 font-medium hover:text-teal-500 ${isActive("/messages") ? "text-teal-500" : ""}`}
+              >
                 Mensajes
               </Link>
             </li>
             <li className="py-2">
-              <Link to="/faq" className="text-gray-800 font-medium hover:text-teal-500">
+              <Link
+                to="/faq"
+                className={`text-gray-800 font-medium hover:text-teal-500 ${isActive("/faq") ? "text-teal-500" : ""}`}
+              >
                 FAQ
               </Link>
             </li>
