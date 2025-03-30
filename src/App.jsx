@@ -6,6 +6,7 @@ import Faq from "./pages/Faq"
 import Profile from "./pages/Profile"
 import Messages from "./pages/Messages"
 import Search from "./pages/Search"
+import MessagesP from "./pages/MessagesProductor"
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/messages" element={<Messages />} />
         <Route path="/search" element={<Search />} />
+        <Route path="/messagesProductor" element={<MessagesP/>} />
       </Routes>
     </Router>
   )
