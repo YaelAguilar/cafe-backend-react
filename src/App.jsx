@@ -20,35 +20,23 @@ function App() {
           <Route
             path="/"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowedUserTypes={["merchant"]}>
                 <Home />
               </ProtectedRoute>
             }
           />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/productorview" element={<ProductorInicio />} />
-          <Route path="/productorprofile" element={<ProductorPerfil />} />
           <Route
-            path="/producer-coming-soon"
+            path="/buscar"
             element={
-              <ProtectedRoute>
-                <ProducerComingSoon />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/faq"
-            element={
-              <ProtectedRoute>
-                <Faq />
+              <ProtectedRoute allowedUserTypes={["merchant"]}>
+                <Buscar />
               </ProtectedRoute>
             }
           />
           <Route
             path="/perfil"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowedUserTypes={["merchant"]}>
                 <Perfil />
               </ProtectedRoute>
             }
@@ -56,19 +44,48 @@ function App() {
           <Route
             path="/mensajes"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowedUserTypes={["merchant"]}>
                 <Mensajes />
               </ProtectedRoute>
             }
           />
           <Route
-            path="/buscar"
+            path="/faq"
             element={
-              <ProtectedRoute>
-                <Buscar />
+              <ProtectedRoute allowedUserTypes={["merchant"]}>
+                <Faq />
               </ProtectedRoute>
             }
           />
+
+          <Route
+            path="/productorview"
+            element={
+              <ProtectedRoute allowedUserTypes={["producer"]}>
+                <ProductorInicio />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/productorprofile"
+            element={
+              <ProtectedRoute allowedUserTypes={["producer"]}>
+                <ProductorPerfil />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/producer-coming-soon"
+            element={
+              <ProtectedRoute allowedUserTypes={["producer"]}>
+                <ProducerComingSoon />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
         </Routes>
       </AuthProvider>
     </Router>
@@ -76,4 +93,3 @@ function App() {
 }
 
 export default App
-

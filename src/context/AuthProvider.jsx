@@ -62,7 +62,7 @@ export const AuthProvider = ({ children }) => {
         if (user.userType === "merchant") {
           navigate("/")
         } else {
-          navigate("/producer-coming-soon")
+          navigate("/productorview")
         }
 
         return { success: true }
@@ -92,7 +92,7 @@ export const AuthProvider = ({ children }) => {
         if (user.userType === "merchant") {
           navigate("/")
         } else {
-          navigate("/producer-coming-soon")
+          navigate("/productorview")
         }
 
         return { success: true }
