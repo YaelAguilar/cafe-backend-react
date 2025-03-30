@@ -5,9 +5,9 @@ import Home from "./pages/Home"
 import Login from "./pages/Login"
 import Register from "./pages/Register"
 import Faq from "./pages/Faq"
-import Perfil from "./pages/Profile"
-import Mensajes from "./pages/Messages"
-import Buscar from "./pages/Search"
+import Perfil from "./pages/Perfil"
+import Mensajes from "./pages/Mensajes"
+import Buscar from "./pages/Buscar"
 import ProducerComingSoon from "./pages/ProducerComingSoon"
 
 function App() {

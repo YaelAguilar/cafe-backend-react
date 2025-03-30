@@ -2,11 +2,10 @@
 import Header from "../components/Header"
 import Footer from "../components/Footer"
 import SectionTitle from "../components/ui/SectionTitle"
-import SearchFilters from "../components/search/SearchFilters"
-import ProviderCard from "../components/search/ProviderCard"
+import SearchFilters from "../components/buscar/SearchFilters"
+import ProviderCard from "../components/buscar/ProviderCard"
 
 function Search() {
-  // Estas variables deberían pasarse al componente SearchFilters
   const providers = [
     {
       id: 1,

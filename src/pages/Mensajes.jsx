@@ -4,10 +4,10 @@ import { useState } from "react"
 import Header from "../components/Header"
 import Footer from "../components/Footer"
 import SectionTitle from "../components/ui/SectionTitle"
-import ContactList from "../components/messages/ContactList"
-import ChatHeader from "../components/messages/ChatHeader"
-import MessageList from "../components/messages/MessageList"
-import ChatInput from "../components/messages/ChatInput"
+import ContactList from "../components/mensajes/ContactList"
+import ChatHeader from "../components/mensajes/ChatHeader"
+import MessageList from "../components/mensajes/MessageList"
+import ChatInput from "../components/mensajes/ChatInput"
 
 function Messages() {
   const [activeContact, setActiveContact] = useState(0)
@@ -80,7 +80,7 @@ function Messages() {
 
   const handleSendMessage = (text) => {
     console.log("Mensaje enviado:", text)
-    // Aquí iría la lógica para enviar el mensaje
+    // Lógica para enviar el mensaje
   }
 
   return (
