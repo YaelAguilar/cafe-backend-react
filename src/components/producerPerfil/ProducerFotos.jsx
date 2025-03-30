@@ -14,7 +14,9 @@ const ProducerFotos = ({
       <h3 className="text-2xl font-bold mb-6 text-gray-800">Fotos</h3>
       <form className="space-y-6 mb-10" onSubmit={handlePhotosSubmit}>
         <div>
-          <label className="block font-semibold mb-2 text-gray-700">Subir Archivos</label>
+          <label className="block font-semibold mb-2 text-gray-700">
+            Subir Archivos
+          </label>
           <div className="flex items-center">
             <label className="flex flex-col items-center px-4 py-6 bg-white text-blue rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:bg-blue-500 hover:text-white">
               <svg
@@ -25,7 +27,9 @@ const ProducerFotos = ({
               >
                 <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
               </svg>
-              <span className="mt-2 text-base leading-normal">Elegir archivos</span>
+              <span className="mt-2 text-base leading-normal">
+                Elegir archivos
+              </span>
               <input
                 type="file"
                 className="hidden"
@@ -46,7 +50,9 @@ const ProducerFotos = ({
         </Button>
       </form>
       <div>
-        <h4 className="text-xl font-semibold mb-4 text-gray-700">Galería de Fotos</h4>
+        <h4 className="text-xl font-semibold mb-4 text-gray-700">
+          Galería de Fotos
+        </h4>
         {loadingPhotos ? (
           <div className="flex justify-center py-8">
             <div className="animate-spin rounded-full h-8 w-8 border-t-4 border-b-4 border-teal-500"></div>
@@ -59,20 +65,17 @@ const ProducerFotos = ({
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {photos.map((photo) => (
-              <div key={photo.id} className="group relative">
-                <div className="aspect-square overflow-hidden rounded-lg shadow-md bg-gray-100">
-                  <img
-                    src={photo.imageUrl || "/placeholder.svg"}
-                    alt={photo.title || "Foto de finca"}
-                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                  />
-                </div>
-                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-opacity duration-300 flex items-end">
-                  <div className="p-3 w-full text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <p className="text-sm font-medium truncate">{photo.title || "Sin título"}</p>
-                    <p className="text-xs">{new Date(photo.uploadDate).toLocaleDateString()}</p>
-                  </div>
-                </div>
+              <div key={photo.id} className="overflow-hidden rounded-lg">
+                <img
+                  src={photo.imageUrl || "/placeholder.svg"}
+                  alt={photo.title || "Foto"}
+                  className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                  style={{ opacity: 1 }}
+                  onError={(e) => {
+                    console.error("Error loading image:", photo.imageUrl);
+                    e.target.src = "/placeholder.svg";
+                  }}
+                />
               </div>
             ))}
           </div>

@@ -3,7 +3,6 @@ import { MapPin, Coffee } from "lucide-react"
 import Button from "../ui/Button"
 
 function ProviderCard({ provider }) {
-  // Extraemos la información del productor desde la propiedad Producer del proveedor
   const producer = provider.Producer
 
   const location =
@@ -50,7 +49,7 @@ function ProviderCard({ provider }) {
           <Link to="/mensajes">
             <Button>Contactar</Button>
           </Link>
-          <Link to={`/provider/${provider.id}`}>
+          <Link to={`/provider/${provider.Producer?.id}`}>
             <Button variant="outline">Ver Perfil</Button>
           </Link>
         </div>

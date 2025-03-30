@@ -36,6 +36,8 @@ const ProducerPerfil = () => {
     processingMethods: ["Lavado", "Natural", "Honey"],
     agriculturalPractices: "",
     cuppingNotes: "",
+    // Almacenar el ID del productor directamente en el perfil
+    producerId: null
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -46,8 +48,6 @@ const ProducerPerfil = () => {
   const [uploadingImage, setUploadingImage] = useState(false);
 
   const profileImageInputRef = useRef(null);
-  // photosInputRef ya no se usa, por lo que se elimina
-
   const API_URL = "http://localhost:2010/api";
   const token = localStorage.getItem("token");
 
@@ -83,6 +83,7 @@ const ProducerPerfil = () => {
           processingMethods: user.Producer?.processingMethods || ["Lavado", "Natural", "Honey"],
           agriculturalPractices: user.Producer?.agriculturalPractices || "",
           cuppingNotes: user.Producer?.cuppingNotes || "",
+          producerId: user.Producer?.id || null
         });
       } else {
         setError(response.data.message || "Error al cargar el perfil");
@@ -96,12 +97,13 @@ const ProducerPerfil = () => {
   }, [API_URL, token]);
 
   const fetchPhotos = useCallback(async () => {
-    if (activeTab !== "fotos") return;
+    if (activeTab !== "fotos" || !profile.producerId) return;
     try {
       setLoadingPhotos(true);
-      const response = await axios.get(`${API_URL}/users/producer/photos`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axios.get(
+        `${API_URL}/users/producer/photos?producerId=${profile.producerId}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
       if (response.data.success) {
         setPhotos(response.data.photos);
       } else {
@@ -112,7 +114,7 @@ const ProducerPerfil = () => {
     } finally {
       setLoadingPhotos(false);
     }
-  }, [API_URL, token, activeTab]);
+  }, [API_URL, activeTab, profile.producerId, token]);
 
   useEffect(() => {
     fetchProfile();
@@ -120,7 +122,7 @@ const ProducerPerfil = () => {
 
   useEffect(() => {
     fetchPhotos();
-  }, [fetchPhotos, activeTab]);
+  }, [fetchPhotos]);
 
   const handleChange = (e) => {
     const { id, value } = e.target;

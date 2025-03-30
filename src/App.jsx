@@ -1,17 +1,18 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
-import { AuthProvider } from "./context/AuthProvider"
-import ProtectedRoute from "./components/ProtectedRoute"
-import Home from "./pages/Home"
-import Login from "./pages/Login"
-import Register from "./pages/Register"
-import Faq from "./pages/Faq"
-import Perfil from "./pages/Perfil"
-import Mensajes from "./pages/Mensajes"
-import Buscar from "./pages/Buscar"
-import ProducerComingSoon from "./pages/ProducerComingSoon"
-import ProductorInicio from "./pages/Producer"
-import ProductorPerfil from "./pages/ProducerPerfil"
-import NotFound from "./pages/NotFound"
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./context/AuthProvider";
+import ProtectedRoute from "./components/ProtectedRoute";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Faq from "./pages/Faq";
+import Perfil from "./pages/Perfil";
+import Mensajes from "./pages/Mensajes";
+import Buscar from "./pages/Buscar";
+import ProducerComingSoon from "./pages/ProducerComingSoon";
+import ProductorInicio from "./pages/Producer";
+import ProductorPerfil from "./pages/ProducerPerfil";
+import ProviderProfileView from "./pages/ProviderProfileView";
+import NotFound from "./pages/NotFound";
 
 function App() {
   return (
@@ -59,6 +60,15 @@ function App() {
               </ProtectedRoute>
             }
           />
+          {/* Nueva ruta para ver el perfil de proveedor */}
+          <Route
+            path="/provider/:id"
+            element={
+              <ProtectedRoute allowedUserTypes={["merchant"]}>
+                <ProviderProfileView />
+              </ProtectedRoute>
+            }
+          />
 
           {/* Rutas para productores */}
           <Route
@@ -77,7 +87,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/producer-coming-soon"
             element={
@@ -96,7 +105,7 @@ function App() {
         </Routes>
       </AuthProvider>
     </Router>
-  )
+  );
 }
 
-export default App
+export default App;
