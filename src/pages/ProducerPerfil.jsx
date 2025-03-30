@@ -1,582 +1,348 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
+import axios from "axios";
 import PHeader from "../components/PHeader";
 import PFooter from "../components/PFooter";
+import ProducerSidebar from "../components/producerPerfil/ProducerSidebar";
+import ProducerInfoGeneral from "../components/producerPerfil/ProducerInfoGeneral";
+import ProducerDatosFinca from "../components/producerPerfil/ProducerDatosFinca";
+import ProducerProduccion from "../components/producerPerfil/ProducerProduccion";
+import ProducerFotos from "../components/producerPerfil/ProducerFotos";
 
-const ProductorPerfil = () => {
-  // Estado para controlar la pestaña activa (por defecto "info-general")
+const ProducerPerfil = () => {
   const [activeTab, setActiveTab] = useState("info-general");
+  const [profile, setProfile] = useState({
+    // Información General
+    businessName: "",
+    producerType: "individual",
+    experienceYears: "",
+    description: "",
+    city: "",
+    state: "",
+    website: "",
+    phone: "",
+    imageUrl: null,
+    // Datos de la Finca
+    altitude: "",
+    totalArea: "",
+    coffeeArea: "",
+    soilType: "Volcánico",
+    microclimate: "",
+    waterSources: ["Río/Arroyo", "Manantial"],
+    infrastructure: "",
+    // Producción
+    coffeeVarieties: ["Typica", "Bourbon", "Caturra"],
+    annualProduction: "",
+    harvestSeason: "Noviembre - Febrero",
+    processingMethods: ["Lavado", "Natural", "Honey"],
+    agriculturalPractices: "",
+    cuppingNotes: "",
+  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [saveSuccess, setSaveSuccess] = useState(false);
+  const [photos, setPhotos] = useState([]);
+  const [loadingPhotos, setLoadingPhotos] = useState(false);
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [uploadingImage, setUploadingImage] = useState(false);
 
-  // Determina si una pestaña está activa para aplicar estilos
-  const isActive = (tabId) => activeTab === tabId;
+  const profileImageInputRef = useRef(null);
+  // photosInputRef ya no se usa, por lo que se elimina
+
+  const API_URL = "http://localhost:2010/api";
+  const token = localStorage.getItem("token");
+
+  const fetchProfile = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await axios.get(`${API_URL}/users/producer/profile`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (response.data.success) {
+        const user = response.data.profile;
+        setProfile({
+          businessName: user.businessName || "",
+          producerType: user.Producer?.producerType || "individual",
+          experienceYears: user.Producer?.experienceYears || "",
+          description: user.Producer?.description || "",
+          city: user.Producer?.city || "",
+          state: user.Producer?.state || "",
+          website: user.Producer?.website || "",
+          phone: user.Producer?.phone || "",
+          imageUrl: user.Producer?.imageUrl || null,
+          altitude: user.Producer?.altitude || "",
+          totalArea: user.Producer?.totalArea || "",
+          coffeeArea: user.Producer?.coffeeArea || "",
+          soilType: user.Producer?.soilType || "Volcánico",
+          microclimate: user.Producer?.microclimate || "",
+          waterSources: user.Producer?.waterSources || ["Río/Arroyo", "Manantial"],
+          infrastructure: user.Producer?.infrastructure || "",
+          coffeeVarieties: user.Producer?.coffeeVarieties || ["Typica", "Bourbon", "Caturra"],
+          annualProduction: user.Producer?.annualProduction || "",
+          harvestSeason: user.Producer?.harvestSeason || "Noviembre - Febrero",
+          processingMethods: user.Producer?.processingMethods || ["Lavado", "Natural", "Honey"],
+          agriculturalPractices: user.Producer?.agriculturalPractices || "",
+          cuppingNotes: user.Producer?.cuppingNotes || "",
+        });
+      } else {
+        setError(response.data.message || "Error al cargar el perfil");
+      }
+    } catch (err) {
+      console.error("Error al obtener perfil:", err);
+      setError("Error al cargar el perfil");
+    } finally {
+      setLoading(false);
+    }
+  }, [API_URL, token]);
+
+  const fetchPhotos = useCallback(async () => {
+    if (activeTab !== "fotos") return;
+    try {
+      setLoadingPhotos(true);
+      const response = await axios.get(`${API_URL}/users/producer/photos`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (response.data.success) {
+        setPhotos(response.data.photos);
+      } else {
+        console.error("Error al cargar fotos:", response.data.message);
+      }
+    } catch (err) {
+      console.error("Error al obtener fotos:", err);
+    } finally {
+      setLoadingPhotos(false);
+    }
+  }, [API_URL, token, activeTab]);
+
+  useEffect(() => {
+    fetchProfile();
+  }, [fetchProfile]);
+
+  useEffect(() => {
+    fetchPhotos();
+  }, [fetchPhotos, activeTab]);
+
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setProfile((prev) => ({ ...prev, [id]: value }));
+  };
+
+  const handleCheckboxChange = (field, value) => {
+    setProfile((prev) => {
+      const currentValues = prev[field] || [];
+      return currentValues.includes(value)
+        ? { ...prev, [field]: currentValues.filter((item) => item !== value) }
+        : { ...prev, [field]: [...currentValues, value] };
+    });
+  };
+
+  const handleSubmit = async (e, tabName) => {
+    e.preventDefault();
+    try {
+      setLoading(true);
+      setSaveSuccess(false);
+      let dataToSend = {};
+      if (tabName === "info-general") {
+        dataToSend = {
+          businessName: profile.businessName,
+          phone: profile.phone,
+          city: profile.city,
+          state: profile.state,
+          website: profile.website,
+          producerType: profile.producerType,
+          experienceYears: profile.experienceYears,
+          description: profile.description,
+        };
+      } else if (tabName === "finca") {
+        dataToSend = {
+          altitude: profile.altitude,
+          totalArea: profile.totalArea,
+          coffeeArea: profile.coffeeArea,
+          soilType: profile.soilType,
+          microclimate: profile.microclimate,
+          waterSources: profile.waterSources,
+          infrastructure: profile.infrastructure,
+        };
+      } else if (tabName === "produccion") {
+        dataToSend = {
+          coffeeVarieties: profile.coffeeVarieties,
+          annualProduction: profile.annualProduction,
+          harvestSeason: profile.harvestSeason,
+          processingMethods: profile.processingMethods,
+          agriculturalPractices: profile.agriculturalPractices,
+          cuppingNotes: profile.cuppingNotes,
+        };
+      }
+      const response = await axios.put(`${API_URL}/users/producer/profile`, dataToSend, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (response.data.success) {
+        setSaveSuccess(true);
+        setTimeout(() => setSaveSuccess(false), 3000);
+        fetchProfile();
+      } else {
+        setError("Error al guardar cambios: " + (response.data.message || "Error desconocido"));
+      }
+    } catch (err) {
+      console.error("Error al guardar cambios:", err);
+      setError("Error al guardar cambios: " + (err.response?.data?.message || err.message || "Error desconocido"));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleProfileImageClick = () => {
+    profileImageInputRef.current.click();
+  };
+
+  const handleProfileImageChange = async (e) => {
+    if (!e.target.files || !e.target.files[0]) return;
+    const file = e.target.files[0];
+    const validTypes = ["image/jpeg", "image/jpg", "image/png", "image/gif"];
+    if (!validTypes.includes(file.type)) {
+      setError("Solo se permiten imágenes (JPEG, JPG, PNG, GIF)");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setError("La imagen no debe superar los 5MB");
+      return;
+    }
+    try {
+      setUploadingImage(true);
+      setError(null);
+      const formData = new FormData();
+      formData.append("image", file);
+      const response = await axios.post(`${API_URL}/users/upload-profile-image`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      if (response.data.success) {
+        setSaveSuccess(true);
+        setTimeout(() => setSaveSuccess(false), 3000);
+        setProfile((prev) => ({
+          ...prev,
+          imageUrl: response.data.imageUrl,
+        }));
+      } else {
+        setError("Error al subir imagen: " + (response.data.message || "Error desconocido"));
+      }
+    } catch (err) {
+      console.error("Error al subir imagen:", err);
+      setError("Error al subir imagen: " + (err.response?.data?.message || err.message || "Error desconocido"));
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
+  const handlePhotosChange = (e) => {
+    if (!e.target.files) return;
+    setSelectedFiles(Array.from(e.target.files));
+  };
+
+  const handlePhotosSubmit = async (e) => {
+    e.preventDefault();
+    if (selectedFiles.length === 0) {
+      setError("No se ha seleccionado ningún archivo");
+      return;
+    }
+    try {
+      setLoading(true);
+      setError(null);
+      const formData = new FormData();
+      selectedFiles.forEach((file) => {
+        formData.append("photos", file);
+      });
+      const response = await axios.post(`${API_URL}/users/producer/upload-photos`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      if (response.data.success) {
+        setSaveSuccess(true);
+        setTimeout(() => setSaveSuccess(false), 3000);
+        setSelectedFiles([]);
+        fetchPhotos();
+      } else {
+        setError("Error al subir fotos: " + (response.data.message || "Error desconocido"));
+      }
+    } catch (err) {
+      console.error("Error al subir fotos:", err);
+      setError("Error al subir fotos: " + (err.response?.data?.message || err.message || "Error desconocido"));
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="bg-gray-50">
+    <div className="bg-gray-50 min-h-screen">
       <PHeader />
-
-      {/* Sección de Perfil y Gestión */}
       <section id="perfil" className="profile-section page-section py-8">
-        <div className="flex mx-auto">
-          {/* Sidebar */}
-          <div className="w-72 bg-white shadow-sm">
-            <div className="profile-avatar relative w-[150px] h-[150px] mx-auto my-6">
-              <img
-                src="https://images.unsplash.com/photo-1599488615731-7e5c2823ff28?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80"
-                alt="Perfil de productor"
-                className="w-full h-full object-cover rounded-full"
-              />
-              <button className="edit-avatar-btn absolute bottom-2 right-2 bg-white text-teal-500 w-10 h-10 rounded-full shadow-md flex items-center justify-center">
-                <i className="fas fa-camera"></i>
-              </button>
-            </div>
-
-            <h3 className="profile-name text-xl font-bold text-center">
-              Finca El Paraíso
-            </h3>
-            <p className="profile-type text-teal-500 font-semibold text-center mb-6">
-              Productor Verificado
-            </p>
-
-            {/* Menú de Tabs */}
-            <ul className="profile-menu">
-              {/* Información General */}
-              <li
-                className={`transition-colors ${
-                  isActive("info-general")
-                    ? "bg-teal-500 text-white"
-                    : "text-gray-800 hover:bg-gray-100"
-                }`}
-              >
-                <button
-                  onClick={() => setActiveTab("info-general")}
-                  className="w-full text-left flex items-center gap-2 p-4"
-                >
-                  <i className="fas fa-user"></i> Información General
-                </button>
-              </li>
-
-              {/* Datos de la Finca */}
-              <li
-                className={`transition-colors ${
-                  isActive("finca")
-                    ? "bg-teal-500 text-white"
-                    : "text-gray-800 hover:bg-gray-100"
-                }`}
-              >
-                <button
-                  onClick={() => setActiveTab("finca")}
-                  className="w-full text-left flex items-center gap-2 p-4"
-                >
-                  <i className="fas fa-mountain"></i> Datos de la Finca
-                </button>
-              </li>
-
-              {/* Producción */}
-              <li
-                className={`transition-colors ${
-                  isActive("produccion")
-                    ? "bg-teal-500 text-white"
-                    : "text-gray-800 hover:bg-gray-100"
-                }`}
-              >
-                <button
-                  onClick={() => setActiveTab("produccion")}
-                  className="w-full text-left flex items-center gap-2 p-4"
-                >
-                  <i className="fas fa-seedling"></i> Producción
-                </button>
-              </li>
-
-              {/* Fotos y Media */}
-              <li
-                className={`transition-colors ${
-                  isActive("fotos")
-                    ? "bg-teal-500 text-white"
-                    : "text-gray-800 hover:bg-gray-100"
-                }`}
-              >
-                <button
-                  onClick={() => setActiveTab("fotos")}
-                  className="w-full text-left flex items-center gap-2 p-4"
-                >
-                  <i className="fas fa-images"></i> Fotos y Media
-                </button>
-              </li>
-            </ul>
-          </div>
-
-          {/* Contenido de Tabs */}
+        <div className="container mx-auto px-5 flex flex-col lg:flex-row gap-8">
+          <ProducerSidebar
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            profile={profile}
+            handleProfileImageClick={handleProfileImageClick}
+            profileImageInputRef={profileImageInputRef}
+            uploadingImage={uploadingImage}
+            handleProfileImageChange={handleProfileImageChange}
+          />
           <div className="flex-1 bg-white shadow-sm p-8">
-            {/* Información General */}
+            {error && (
+              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                {error}
+              </div>
+            )}
+            {saveSuccess && (
+              <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+                Cambios guardados correctamente.
+              </div>
+            )}
             {activeTab === "info-general" && (
-            <div id="info-general" className="profile-tab">
-              <h3 className="text-2xl font-bold mb-6 text-gray-800">
-                Información General
-              </h3>
-              <form className="space-y-6">
-                <div>
-                  <label
-                    htmlFor="farm-name"
-                    className="block font-semibold mb-2 text-gray-700"
-                  >
-                    Nombre de la Finca/Cooperativa
-                  </label>
-                  <input
-                    type="text"
-                    id="farm-name"
-                    defaultValue="Finca El Paraíso"
-                    className="w-full p-3 border border-gray-300 rounded"
-                  />
-                </div>
-                <div className="flex flex-col md:flex-row gap-6">
-                  <div className="w-full md:w-1/2">
-                    <label
-                      htmlFor="producer-type"
-                      className="block font-semibold mb-2 text-gray-700"
-                    >
-                      Tipo de Productor
-                    </label>
-                    <select
-                      id="producer-type"
-                      defaultValue="individual"
-                      className="w-full p-3 border border-gray-300 rounded"
-                    >
-                      <option value="individual">Productor Individual</option>
-                      <option value="cooperative">Cooperativa</option>
-                      <option value="association">Asociación</option>
-                      <option value="company">Empresa</option>
-                    </select>
-                  </div>
-                  <div className="w-full md:w-1/2">
-                    <label
-                      htmlFor="years"
-                      className="block font-semibold mb-2 text-gray-700"
-                    >
-                      Años de Experiencia
-                    </label>
-                    <input
-                      type="number"
-                      id="years"
-                      defaultValue="15"
-                      className="w-full p-3 border border-gray-300 rounded"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label
-                    htmlFor="description"
-                    className="block font-semibold mb-2 text-gray-700"
-                  >
-                    Descripción
-                  </label>
-                  <textarea
-                    id="description"
-                    rows={4}
-                    defaultValue="Finca familiar con más de 15 años de experiencia en la producción de café de especialidad. Nos especializamos en variedades de Arábica cultivadas en altura con métodos sostenibles y respetuosos con el medio ambiente."
-                    className="w-full p-3 border border-gray-300 rounded"
-                  />
-                </div>
-                <div className="flex flex-col md:flex-row gap-6">
-                  <div className="w-full md:w-1/2">
-                    <label
-                      htmlFor="city"
-                      className="block font-semibold mb-2 text-gray-700"
-                    >
-                      Ciudad/Municipio
-                    </label>
-                    <input
-                      type="text"
-                      id="city"
-                      defaultValue="San Cristóbal de las Casas"
-                      className="w-full p-3 border border-gray-300 rounded"
-                    />
-                  </div>
-                  <div className="w-full md:w-1/2">
-                    <label
-                      htmlFor="state"
-                      className="block font-semibold mb-2 text-gray-700"
-                    >
-                      Estado
-                    </label>
-                    <input
-                      type="text"
-                      id="state"
-                      defaultValue="Chiapas"
-                      className="w-full p-3 border border-gray-300 rounded"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label
-                    htmlFor="website"
-                    className="block font-semibold mb-2 text-gray-700"
-                  >
-                    Sitio Web
-                  </label>
-                  <input
-                    type="url"
-                    id="website"
-                    defaultValue="https://www.fincaelparaiso.mx"
-                    className="w-full p-3 border border-gray-300 rounded"
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="phone"
-                    className="block font-semibold mb-2 text-gray-700"
-                  >
-                    Teléfono
-                  </label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    defaultValue=""
-                    className="w-full p-3 border border-gray-300 rounded"
-                    placeholder="Ingresa tu número de teléfono"
-                    required
-                  />
-                </div>
-                <button
-                  type="submit"
-                  className="mt-4 px-6 py-3 bg-teal-500 text-white font-semibold rounded hover:bg-teal-600"
-                >
-                  Guardar Cambios
-                </button>
-              </form>
-            </div>
-          )}
-
-            {/* Datos de la Finca */}
+              <ProducerInfoGeneral
+                profile={profile}
+                handleChange={handleChange}
+                handleSubmit={(e) => handleSubmit(e, "info-general")}
+                loading={loading}
+              />
+            )}
             {activeTab === "finca" && (
-              <div id="finca" className="profile-tab">
-                <h3 className="text-2xl font-bold mb-6 text-gray-800">
-                  Datos de la Finca
-                </h3>
-                <form className="space-y-6">
-                  <div className="flex flex-col md:flex-row gap-6">
-                    <div className="w-full md:w-1/2">
-                      <label
-                        htmlFor="altitude"
-                        className="block font-semibold mb-2 text-gray-700"
-                      >
-                        Altitud (msnm)
-                      </label>
-                      <input
-                        type="number"
-                        id="altitude"
-                        defaultValue="1500"
-                        className="w-full p-3 border border-gray-300 rounded"
-                      />
-                    </div>
-                    <div className="w-full md:w-1/2">
-                      <label
-                        htmlFor="area"
-                        className="block font-semibold mb-2 text-gray-700"
-                      >
-                        Área Total (hectáreas)
-                      </label>
-                      <input
-                        type="number"
-                        id="area"
-                        defaultValue="25"
-                        className="w-full p-3 border border-gray-300 rounded"
-                      />
-                    </div>
-                  </div>
-                  <div className="flex flex-col md:flex-row gap-6">
-                    <div className="w-full md:w-1/2">
-                      <label
-                        htmlFor="coffee-area"
-                        className="block font-semibold mb-2 text-gray-700"
-                      >
-                        Área de Café (hectáreas)
-                      </label>
-                      <input
-                        type="number"
-                        id="coffee-area"
-                        defaultValue="18"
-                        className="w-full p-3 border border-gray-300 rounded"
-                      />
-                    </div>
-                    <div className="w-full md:w-1/2">
-                      <label
-                        htmlFor="soil-type"
-                        className="block font-semibold mb-2 text-gray-700"
-                      >
-                        Tipo de Suelo
-                      </label>
-                      <select
-                        id="soil-type"
-                        defaultValue="volcanic"
-                        className="w-full p-3 border border-gray-300 rounded"
-                      >
-                        <option value="volcanic">Volcánico</option>
-                        <option value="clay">Arcilloso</option>
-                        <option value="sandy">Arenoso</option>
-                        <option value="loam">Franco</option>
-                        <option value="other">Otro</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="microclimate"
-                      className="block font-semibold mb-2 text-gray-700"
-                    >
-                      Microclima
-                    </label>
-                    <textarea
-                      id="microclimate"
-                      rows={3}
-                      defaultValue="Clima templado con lluvias abundantes durante 8 meses del año. Temperatura promedio de 18-22°C..."
-                      className="w-full p-3 border border-gray-300 rounded"
-                    />
-                  </div>
-                  <div>
-                    <label className="block font-semibold mb-2 text-gray-700">
-                      Fuentes de Agua
-                    </label>
-                    <div className="flex flex-wrap gap-4">
-                      <label className="flex items-center gap-2">
-                        <input
-                          type="checkbox"
-                          defaultChecked
-                          className="w-4 h-4"
-                        />{" "}
-                        Río/Arroyo
-                      </label>
-                      <label className="flex items-center gap-2">
-                        <input
-                          type="checkbox"
-                          defaultChecked
-                          className="w-4 h-4"
-                        />{" "}
-                        Manantial
-                      </label>
-                      <label className="flex items-center gap-2">
-                        <input type="checkbox" className="w-4 h-4" /> Pozo
-                      </label>
-                      <label className="flex items-center gap-2">
-                        <input type="checkbox" className="w-4 h-4" /> Sistema de
-                        Captación de Lluvia
-                      </label>
-                    </div>
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="infrastructure"
-                      className="block font-semibold mb-2 text-gray-700"
-                    >
-                      Infraestructura
-                    </label>
-                    <textarea
-                      id="infrastructure"
-                      rows={3}
-                      defaultValue="Beneficio húmedo propio, área de secado en patios y camas africanas, bodega de almacenamiento..."
-                      className="w-full p-3 border border-gray-300 rounded"
-                    />
-                  </div>
-                  <button
-                    type="submit"
-                    className="mt-4 px-6 py-3 bg-teal-500 text-white font-semibold rounded hover:bg-teal-600"
-                  >
-                    Guardar Cambios
-                  </button>
-                </form>
-              </div>
+              <ProducerDatosFinca
+                profile={profile}
+                handleChange={handleChange}
+                handleSubmit={(e) => handleSubmit(e, "finca")}
+                loading={loading}
+                handleCheckboxChange={handleCheckboxChange}
+              />
             )}
-
-            {/* Producción */}
             {activeTab === "produccion" && (
-              <div id="produccion" className="profile-tab">
-                <h3 className="text-2xl font-bold mb-6 text-gray-800">
-                  Producción
-                </h3>
-                <form className="space-y-6">
-                  <div>
-                    <label className="block font-semibold mb-2 text-gray-700">
-                      Variedades Cultivadas
-                    </label>
-                    <div className="flex flex-wrap gap-4">
-                      <label className="flex items-center gap-2">
-                        <input
-                          type="checkbox"
-                          defaultChecked
-                          className="w-4 h-4"
-                        />{" "}
-                        Typica
-                      </label>
-                      <label className="flex items-center gap-2">
-                        <input
-                          type="checkbox"
-                          defaultChecked
-                          className="w-4 h-4"
-                        />{" "}
-                        Bourbon
-                      </label>
-                      <label className="flex items-center gap-2">
-                        <input
-                          type="checkbox"
-                          defaultChecked
-                          className="w-4 h-4"
-                        />{" "}
-                        Caturra
-                      </label>
-                      <label className="flex items-center gap-2">
-                        <input type="checkbox" className="w-4 h-4" /> Catuaí
-                      </label>
-                      <label className="flex items-center gap-2">
-                        <input type="checkbox" className="w-4 h-4" /> Geisha
-                      </label>
-                      <label className="flex items-center gap-2">
-                        <input type="checkbox" className="w-4 h-4" /> Pacamara
-                      </label>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col md:flex-row gap-6">
-                    <div className="w-full md:w-1/2">
-                      <label
-                        htmlFor="annual-production"
-                        className="block font-semibold mb-2 text-gray-700"
-                      >
-                        Producción Anual (kg)
-                      </label>
-                      <input
-                        type="number"
-                        id="annual-production"
-                        defaultValue="35000"
-                        className="w-full p-3 border border-gray-300 rounded"
-                      />
-                    </div>
-                    <div className="w-full md:w-1/2">
-                      <label
-                        htmlFor="harvest-season"
-                        className="block font-semibold mb-2 text-gray-700"
-                      >
-                        Temporada de Cosecha
-                      </label>
-                      <select
-                        id="harvest-season"
-                        defaultValue="nov-feb"
-                        className="w-full p-3 border border-gray-300 rounded"
-                      >
-                        <option value="nov-feb">Noviembre - Febrero</option>
-                        <option value="dec-mar">Diciembre - Marzo</option>
-                        <option value="jan-apr">Enero - Abril</option>
-                        <option value="feb-may">Febrero - Mayo</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block font-semibold mb-2 text-gray-700">
-                      Métodos de Procesamiento
-                    </label>
-                    <div className="flex flex-wrap gap-4">
-                      <label className="flex items-center gap-2">
-                        <input
-                          type="checkbox"
-                          defaultChecked
-                          className="w-4 h-4"
-                        />{" "}
-                        Lavado
-                      </label>
-                      <label className="flex items-center gap-2">
-                        <input
-                          type="checkbox"
-                          defaultChecked
-                          className="w-4 h-4"
-                        />{" "}
-                        Natural
-                      </label>
-                      <label className="flex items-center gap-2">
-                        <input
-                          type="checkbox"
-                          defaultChecked
-                          className="w-4 h-4"
-                        />{" "}
-                        Honey
-                      </label>
-                      <label className="flex items-center gap-2">
-                        <input type="checkbox" className="w-4 h-4" /> Fermentación
-                        Anaeróbica
-                      </label>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label
-                      htmlFor="farming-practices"
-                      className="block font-semibold mb-2 text-gray-700"
-                    >
-                      Prácticas Agrícolas
-                    </label>
-                    <textarea
-                      id="farming-practices"
-                      rows={3}
-                      defaultValue="Cultivo bajo sombra con árboles nativos. Uso de composta orgánica y control biológico de plagas..."
-                      className="w-full p-3 border border-gray-300 rounded"
-                    />
-                  </div>
-
-                  <div>
-                    <label
-                      htmlFor="cupping-notes"
-                      className="block font-semibold mb-2 text-gray-700"
-                    >
-                      Notas de Catación Típicas
-                    </label>
-                    <textarea
-                      id="cupping-notes"
-                      rows={3}
-                      defaultValue="Notas cítricas, caramelo, chocolate con cuerpo medio-alto y acidez brillante..."
-                      className="w-full p-3 border border-gray-300 rounded"
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="mt-4 px-6 py-3 bg-teal-500 text-white font-semibold rounded hover:bg-teal-600"
-                  >
-                    Guardar Cambios
-                  </button>
-                </form>
-              </div>
+              <ProducerProduccion
+                profile={profile}
+                handleChange={handleChange}
+                handleSubmit={(e) => handleSubmit(e, "produccion")}
+                loading={loading}
+                handleCheckboxChange={handleCheckboxChange}
+              />
             )}
-
-            {/* Fotos y Media */}
             {activeTab === "fotos" && (
-              <div id="fotos" className="profile-tab">
-                <h3 className="text-2xl font-bold mb-6 text-gray-800">
-                  Fotos y Media
-                </h3>
-                <form className="space-y-6">
-                  <div>
-                    <label className="block font-semibold mb-2 text-gray-700">
-                      Subir Archivos
-                    </label>
-                    <input
-                      type="file"
-                      multiple
-                      className="block w-full text-sm text-gray-500"
-                    />
-                  </div>
-                  <button
-                    type="submit"
-                    className="mt-4 px-6 py-3 bg-teal-500 text-white font-semibold rounded hover:bg-teal-600"
-                  >
-                    Guardar
-                  </button>
-                </form>
-              </div>
+              <ProducerFotos
+                photos={photos}
+                loadingPhotos={loadingPhotos}
+                selectedFiles={selectedFiles}
+                handlePhotosChange={handlePhotosChange}
+                handlePhotosSubmit={handlePhotosSubmit}
+                loading={loading}
+              />
             )}
           </div>
         </div>
       </section>
-
       <PFooter />
     </div>
   );
 };
 
-export default ProductorPerfil;
+export default ProducerPerfil;

@@ -7,6 +7,7 @@ function ProtectedRoute({ allowedUserTypes, children }) {
   const { currentUser, loading } = useAuth()
   const location = useLocation()
 
+  // Rutas públicas
   const publicRoutes = ["/", "/login", "/register"]
 
   if (loading) {
@@ -17,18 +18,16 @@ function ProtectedRoute({ allowedUserTypes, children }) {
     )
   }
 
-  // Si no hay usuario autenticado:
+  // Si no hay usuario y la ruta es pública, se permite el acceso
   if (!currentUser) {
-    // Si la ruta es pública, permitir el acceso
     if (publicRoutes.includes(location.pathname)) {
       return children
     }
-    // Si no, redirigir a login
     return <Navigate to="/login" state={{ from: location }} replace />
   }
 
+  // Si se especifica allowedUserTypes y el usuario no pertenece a ninguno, redirigir
   if (allowedUserTypes && !allowedUserTypes.includes(currentUser.userType)) {
-    // Para un productor redirigir a /productorview, para comerciante a "/"
     const redirectTo = currentUser.userType === "producer" ? "/productorview" : "/"
     return <Navigate to={redirectTo} replace />
   }
