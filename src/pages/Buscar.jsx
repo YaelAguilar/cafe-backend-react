@@ -4,46 +4,38 @@ import Footer from "../components/Footer"
 import SectionTitle from "../components/ui/SectionTitle"
 import SearchFilters from "../components/buscar/SearchFilters"
 import ProviderCard from "../components/buscar/ProviderCard"
+import { useEffect, useState } from "react"
+import axios from "axios"
 
 function Search() {
-  const providers = [
-    {
-      id: 1,
-      name: "Cooperativa El Triunfo",
-      image:
-        "https://images.unsplash.com/photo-1591287083773-9a52e5e93fe9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
-      location: "Chiapas, México",
-      types: "Arábica",
-      quality: "Premium",
-      certification: "Orgánico",
-      description:
-        "Cooperativa con más de 20 años de experiencia en la producción de café de altura. Especialistas en variedades arábicas de alta calidad.",
-    },
-    {
-      id: 2,
-      name: "Finca Los Altos",
-      image:
-        "https://images.unsplash.com/photo-1599639668273-c57372e7a82f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
-      location: "Veracruz, México",
-      types: "Robusta",
-      quality: "Comercial",
-      certification: "Comercio Justo",
-      description:
-        "Finca familiar con producción sostenible y compromiso con el comercio justo. Especialistas en café robusta de alta productividad.",
-    },
-    {
-      id: 3,
-      name: "Productores Unidos",
-      image:
-        "https://images.unsplash.com/photo-1611174797136-5d9f8d2b1f62?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
-      location: "Oaxaca, México",
-      types: "Arábica, Excelsa",
-      quality: "Especialidad",
-      certification: "Rainforest Alliance",
-      description:
-        "Asociación de pequeños productores comprometidos con la calidad y la sostenibilidad ambiental. Café de especialidad con notas únicas.",
-    },
-  ]
+  const [providers, setProviders] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState("")
+
+  const API_URL = "http://localhost:2010/api"
+  const token = localStorage.getItem("token")
+
+  useEffect(() => {
+    const fetchProviders = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/users/producer/list`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        if (response.data.success) {
+          setProviders(response.data.providers)
+        } else {
+          setError(response.data.message || "Error al cargar proveedores.")
+        }
+      } catch (err) {
+        console.error("Error al obtener proveedores:", err)
+        setError("Error al obtener proveedores.")
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchProviders()
+  }, [API_URL, token])
 
   return (
     <>
@@ -52,12 +44,19 @@ function Search() {
         <div className="container mx-auto px-5">
           <SectionTitle>Encuentra tu Proveedor Ideal</SectionTitle>
           <SearchFilters />
-
-          <div className="space-y-6">
-            {providers.map((provider) => (
-              <ProviderCard key={provider.id} provider={provider} />
-            ))}
-          </div>
+          {loading ? (
+            <div className="text-center">Cargando proveedores...</div>
+          ) : error ? (
+            <div className="text-center text-red-500">{error}</div>
+          ) : providers.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {providers.map((provider) => (
+                <ProviderCard key={provider.id} provider={provider} />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center">No se encontraron proveedores.</div>
+          )}
         </div>
       </section>
       <Footer />
@@ -66,4 +65,3 @@ function Search() {
 }
 
 export default Search
-
