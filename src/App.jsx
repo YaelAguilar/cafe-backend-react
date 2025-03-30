@@ -6,6 +6,9 @@ import Faq from "./pages/Faq"
 import Profile from "./pages/Profile"
 import Messages from "./pages/Messages"
 import Search from "./pages/Search"
+import ProductorInicio from "./components/Productor/ProductorInicio"
+import ProductorPerfil from "./components/Productor/ProductorPerfil"
+import ProductorLotes from "./components/Productor/ProductorLotes"
 
 function App() {
   return (
@@ -18,6 +21,9 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/messages" element={<Messages />} />
         <Route path="/search" element={<Search />} />
+        <Route path="/productor-inicio" element={<ProductorInicio />} />
+        <Route path="/productor-perfil" element={<ProductorPerfil />} />
+        <Route path="/productor-lotes" element={<ProductorLotes />} />
       </Routes>
     </Router>
   )
