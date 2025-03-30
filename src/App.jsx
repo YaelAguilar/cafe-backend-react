@@ -13,17 +13,12 @@ import ProductorInicio from "./pages/Producer";
 import ProductorPerfil from "./pages/ProducerPerfil";
 import ProviderProfileView from "./pages/ProviderProfileView";
 import NotFound from "./pages/NotFound";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
-import Home from "./pages/Home"
-import Login from "./pages/Login"
-import Register from "./pages/Register"
-import Faq from "./pages/Faq"
 import Profile from "./pages/Profile"
 import Messages from "./pages/Messages"
 import Search from "./pages/Search"
 import MessagesP from "./pages/MessagesProductor"
-import ProductorInicio from "./components/Productor/ProductorInicio"
-import ProductorPerfil from "./components/Productor/ProductorPerfil"
+//import ProductorInicio from "./components/Productor/ProductorInicio"
+//import ProductorPerfil from "./components/Productor/ProductorPerfil"
 import ProductorLotes from "./components/Productor/ProductorLotes"
 import CrearLote from "./components/Productor/CrearLote"
 
