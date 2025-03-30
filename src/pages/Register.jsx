@@ -3,44 +3,91 @@
 import { useState } from "react"
 import { Link } from "react-router-dom"
 import { User, Mail, Lock, Building } from "lucide-react"
+import { useAuth } from "../context/useAuth"
 import CustomAlert from "../components/CustomAlert"
 
 function Register() {
-  const [fullname, setFullname] = useState("")
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
-  const [userType, setUserType] = useState("comerciante")
-  const [company, setCompany] = useState("")
-  const [showAlert, setShowAlert] = useState(false)
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    userType: "merchant", // Por defecto comerciante
+    businessName: "",
+  })
 
-  const handleSubmit = (e) => {
+  const [showAlert, setShowAlert] = useState(false)
+  const [alertData, setAlertData] = useState({
+    title: "",
+    message: "",
+    icon: "",
+    redirectUrl: "",
+  })
+
+  const { register } = useAuth()
+
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({ ...prev, [name]: value }))
+  }
+
+  const handleSubmit = async (e) => {
     e.preventDefault()
 
-    // Validación básica
-    if (password !== confirmPassword) {
-      alert("Las contraseñas no coinciden")
+    if (formData.password !== formData.confirmPassword) {
+      setAlertData({
+        title: "Error de Validación",
+        message: "Las contraseñas no coinciden",
+        icon: "alert-circle",
+        redirectUrl: "",
+      })
+      setShowAlert(true)
       return
     }
 
-    console.log("Registro de usuario:", {
-      fullname,
-      email,
-      userType,
-      company,
-    })
+    const userData = {
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      email: formData.email,
+      password: formData.password,
+      confirmPassword: formData.confirmPassword,
+      userType: formData.userType === "merchant" ? "merchant" : "producer",
+      businessName: formData.businessName,
+    }
 
-    setShowAlert(true)
+    const result = await register(userData)
+
+    if (result.success) {
+      setAlertData({
+        title: "Registro Exitoso",
+        message:
+          "¡Bienvenido a CaféConnect! Tu cuenta ha sido creada correctamente. Redirigiendo...",
+        icon: "check-circle",
+        redirectUrl: formData.userType === "comerciante" ? "/" : "/producer-coming-soon",
+      })
+      setShowAlert(true)
+    } else {
+      setAlertData({
+        title: "Error de Registro",
+        message:
+          result.error ||
+          "Ha ocurrido un error al registrar tu cuenta. Por favor, intenta nuevamente.",
+        icon: "alert-circle",
+        redirectUrl: "",
+      })
+      setShowAlert(true)
+    }
   }
 
   return (
     <div className="min-h-screen bg-gray-100 py-12">
       {showAlert && (
         <CustomAlert
-          title="Registro Exitoso"
-          message="¡Bienvenido a CaféCollect! Tu cuenta ha sido creada correctamente. Redirigiendo..."
-          icon="check-circle"
-          redirectUrl="/"
+          title={alertData.title}
+          message={alertData.message}
+          icon={alertData.icon}
+          redirectUrl={alertData.redirectUrl}
         />
       )}
 
@@ -52,31 +99,55 @@ function Register() {
               alt="Logo"
               className="h-[50px] mr-2.5"
             />
-            <h1 className="text-2xl font-bold text-teal-500">CaféCollect</h1>
+            <h1 className="text-2xl font-bold text-teal-500">CaféConnect</h1>
           </Link>
         </div>
 
         <div className="flex bg-white rounded-lg overflow-hidden shadow-lg max-w-4xl mx-auto">
           <div className="flex-1 p-12">
             <h2 className="text-3xl font-bold text-center text-gray-800 mb-2">Crear Cuenta</h2>
-            <p className="text-gray-600 text-center mb-8">Únete a la comunidad de comerciantes y productores de café</p>
+            <p className="text-gray-600 text-center mb-8">
+              Únete a la comunidad de comerciantes y productores de café
+            </p>
 
             <form onSubmit={handleSubmit} className="mb-8">
               <div className="mb-6">
-                <label htmlFor="fullname" className="block mb-2 font-semibold text-gray-800">
-                  Nombre Completo
+                <label htmlFor="firstName" className="block mb-2 font-semibold text-gray-800">
+                  Nombre
                 </label>
                 <div className="relative">
                   <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
                     <User size={20} />
                   </div>
                   <input
-                    id="fullname"
+                    id="firstName"
+                    name="firstName"
                     type="text"
-                    value={fullname}
-                    onChange={(e) => setFullname(e.target.value)}
+                    value={formData.firstName}
+                    onChange={handleChange}
                     className="w-full py-3 pl-10 pr-3 border border-gray-300 rounded-md focus:border-teal-500 focus:outline-none"
-                    placeholder="Tu nombre completo"
+                    placeholder="Tu nombre"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="mb-6">
+                <label htmlFor="lastName" className="block mb-2 font-semibold text-gray-800">
+                  Apellido
+                </label>
+                <div className="relative">
+                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
+                    <User size={20} />
+                  </div>
+                  <input
+                    id="lastName"
+                    name="lastName"
+                    type="text"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    className="w-full py-3 pl-10 pr-3 border border-gray-300 rounded-md focus:border-teal-500 focus:outline-none"
+                    placeholder="Tu apellido"
                     required
                   />
                 </div>
@@ -92,9 +163,10 @@ function Register() {
                   </div>
                   <input
                     id="email"
+                    name="email"
                     type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={formData.email}
+                    onChange={handleChange}
                     className="w-full py-3 pl-10 pr-3 border border-gray-300 rounded-md focus:border-teal-500 focus:outline-none"
                     placeholder="tu@email.com"
                     required
@@ -112,9 +184,10 @@ function Register() {
                   </div>
                   <input
                     id="password"
+                    name="password"
                     type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    value={formData.password}
+                    onChange={handleChange}
                     className="w-full py-3 pl-10 pr-3 border border-gray-300 rounded-md focus:border-teal-500 focus:outline-none"
                     placeholder="********"
                     required
@@ -123,7 +196,10 @@ function Register() {
               </div>
 
               <div className="mb-6">
-                <label htmlFor="confirm-password" className="block mb-2 font-semibold text-gray-800">
+                <label
+                  htmlFor="confirmPassword"
+                  className="block mb-2 font-semibold text-gray-800"
+                >
                   Confirmar Contraseña
                 </label>
                 <div className="relative">
@@ -131,10 +207,11 @@ function Register() {
                     <Lock size={20} />
                   </div>
                   <input
-                    id="confirm-password"
+                    id="confirmPassword"
+                    name="confirmPassword"
                     type="password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
                     className="w-full py-3 pl-10 pr-3 border border-gray-300 rounded-md focus:border-teal-500 focus:outline-none"
                     placeholder="********"
                     required
@@ -152,19 +229,20 @@ function Register() {
                   </div>
                   <select
                     id="user-type"
-                    value={userType}
-                    onChange={(e) => setUserType(e.target.value)}
+                    name="userType"
+                    value={formData.userType}
+                    onChange={handleChange}
                     className="w-full py-3 pl-10 pr-3 border border-gray-300 rounded-md focus:border-teal-500 focus:outline-none appearance-none"
                     required
                   >
-                    <option value="comerciante">Comerciante</option>
-                    <option value="productor">Productor</option>
+                    <option value="merchant">Comerciante</option>
+                    <option value="producer">Productor</option>
                   </select>
                 </div>
               </div>
 
               <div className="mb-6">
-                <label htmlFor="company" className="block mb-2 font-semibold text-gray-800">
+                <label htmlFor="businessName" className="block mb-2 font-semibold text-gray-800">
                   Empresa / Negocio
                 </label>
                 <div className="relative">
@@ -172,10 +250,11 @@ function Register() {
                     <Building size={20} />
                   </div>
                   <input
-                    id="company"
+                    id="businessName"
+                    name="businessName"
                     type="text"
-                    value={company}
-                    onChange={(e) => setCompany(e.target.value)}
+                    value={formData.businessName}
+                    onChange={handleChange}
                     className="w-full py-3 pl-10 pr-3 border border-gray-300 rounded-md focus:border-teal-500 focus:outline-none"
                     placeholder="Nombre de tu empresa o negocio"
                     required
@@ -201,8 +280,8 @@ function Register() {
 
           <div className="hidden md:block flex-1 relative">
             <img
-              src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
-              alt="Granos de café"
+              src="https://images.unsplash.com/photo-1497935586047-9397d4dc844c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1351&q=80"
+              alt="Café"
               className="w-full h-full object-cover absolute inset-0"
             />
             <div className="absolute bottom-0 left-0 w-full p-8 bg-gradient-to-t from-black/80 to-transparent text-white">

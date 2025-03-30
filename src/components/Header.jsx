@@ -2,14 +2,21 @@
 
 import { useState } from "react"
 import { Link, useLocation } from "react-router-dom"
-import { Menu } from "lucide-react"
+import { Menu, User, LogOut } from "lucide-react"
+import { useAuth } from "../context/useAuth"
 
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const location = useLocation() // Obtener la ubicación actual
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
+  const location = useLocation()
+  const { currentUser, logout } = useAuth()
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen)
+  }
+
+  const toggleUserMenu = () => {
+    setIsUserMenuOpen(!isUserMenuOpen)
   }
 
   // Función para determinar si un link está activo
@@ -43,9 +50,9 @@ function Header() {
             </li>
             <li className="mx-4">
               <Link
-                to="/search"
+                to="/buscar"
                 className={`text-gray-800 font-medium hover:text-teal-500 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:h-0.5 after:bg-teal-500 after:transition-all ${
-                  isActive("/search") ? "text-teal-500 after:w-full" : "after:w-0 hover:after:w-full"
+                  isActive("/buscar") ? "text-teal-500 after:w-full" : "after:w-0 hover:after:w-full"
                 }`}
               >
                 Buscar Proveedores
@@ -53,9 +60,9 @@ function Header() {
             </li>
             <li className="mx-4">
               <Link
-                to="/profile"
+                to="/perfil"
                 className={`text-gray-800 font-medium hover:text-teal-500 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:h-0.5 after:bg-teal-500 after:transition-all ${
-                  isActive("/profile") ? "text-teal-500 after:w-full" : "after:w-0 hover:after:w-full"
+                  isActive("/perfil") ? "text-teal-500 after:w-full" : "after:w-0 hover:after:w-full"
                 }`}
               >
                 Mi Perfil
@@ -63,9 +70,9 @@ function Header() {
             </li>
             <li className="mx-4">
               <Link
-                to="/messages"
+                to="/mensajes"
                 className={`text-gray-800 font-medium hover:text-teal-500 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:h-0.5 after:bg-teal-500 after:transition-all ${
-                  isActive("/messages") ? "text-teal-500 after:w-full" : "after:w-0 hover:after:w-full"
+                  isActive("/mensajes") ? "text-teal-500 after:w-full" : "after:w-0 hover:after:w-full"
                 }`}
               >
                 Mensajes
@@ -84,20 +91,44 @@ function Header() {
           </ul>
         </nav>
 
-        <div className="hidden md:flex gap-2.5">
-          <Link
-            to="/login"
-            className="px-4 py-2 border-2 border-teal-500 text-teal-500 font-semibold rounded hover:bg-teal-500 hover:text-white transition-colors"
-          >
-            Iniciar Sesión
-          </Link>
-          <Link
-            to="/register"
-            className="px-4 py-2 bg-teal-500 text-white font-semibold rounded hover:bg-teal-600 transition-colors"
-          >
-            Registrarse
-          </Link>
-        </div>
+        {currentUser ? (
+          <div className="hidden md:block relative">
+            <button
+              onClick={toggleUserMenu}
+              className="flex items-center gap-2 px-3 py-2 rounded-full border border-teal-500 text-teal-500 hover:bg-teal-50 transition-colors"
+            >
+              <User size={20} />
+              <span className="font-medium">{currentUser.firstName}</span>
+            </button>
+
+            {isUserMenuOpen && (
+              <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                <button
+                  onClick={logout}
+                  className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
+                  <LogOut size={16} className="mr-2" />
+                  <span>Cerrar Sesión</span>
+                </button>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="hidden md:flex gap-2.5">
+            <Link
+              to="/login"
+              className="px-4 py-2 border-2 border-teal-500 text-teal-500 font-semibold rounded hover:bg-teal-500 hover:text-white transition-colors"
+            >
+              Iniciar Sesión
+            </Link>
+            <Link
+              to="/register"
+              className="px-4 py-2 bg-teal-500 text-white font-semibold rounded hover:bg-teal-600 transition-colors"
+            >
+              Registrarse
+            </Link>
+          </div>
+        )}
 
         <button className="md:hidden text-2xl text-gray-800" onClick={toggleMenu}>
           <Menu />
@@ -117,24 +148,24 @@ function Header() {
             </li>
             <li className="py-2">
               <Link
-                to="/search"
-                className={`text-gray-800 font-medium hover:text-teal-500 ${isActive("/search") ? "text-teal-500" : ""}`}
+                to="/buscar"
+                className={`text-gray-800 font-medium hover:text-teal-500 ${isActive("/buscar") ? "text-teal-500" : ""}`}
               >
                 Buscar Proveedores
               </Link>
             </li>
             <li className="py-2">
               <Link
-                to="/profile"
-                className={`text-gray-800 font-medium hover:text-teal-500 ${isActive("/profile") ? "text-teal-500" : ""}`}
+                to="/perfil"
+                className={`text-gray-800 font-medium hover:text-teal-500 ${isActive("/perfil") ? "text-teal-500" : ""}`}
               >
                 Mi Perfil
               </Link>
             </li>
             <li className="py-2">
               <Link
-                to="/messages"
-                className={`text-gray-800 font-medium hover:text-teal-500 ${isActive("/messages") ? "text-teal-500" : ""}`}
+                to="/mensajes"
+                className={`text-gray-800 font-medium hover:text-teal-500 ${isActive("/mensajes") ? "text-teal-500" : ""}`}
               >
                 Mensajes
               </Link>
@@ -147,21 +178,32 @@ function Header() {
                 FAQ
               </Link>
             </li>
+            {currentUser && (
+              <li className="py-2 border-t border-gray-200 mt-2 pt-4">
+                <button onClick={logout} className="flex items-center text-gray-800 font-medium hover:text-teal-500">
+                  <LogOut size={18} className="mr-2" />
+                  <span>Cerrar Sesión</span>
+                </button>
+              </li>
+            )}
           </ul>
-          <div className="flex flex-col absolute top-[calc(80px+100%)] left-0 w-full bg-white p-4 shadow-md z-50 gap-2">
-            <Link
-              to="/login"
-              className="px-4 py-2 border-2 border-teal-500 text-teal-500 font-semibold rounded text-center hover:bg-teal-500 hover:text-white transition-colors"
-            >
-              Iniciar Sesión
-            </Link>
-            <Link
-              to="/register"
-              className="px-4 py-2 bg-teal-500 text-white font-semibold rounded text-center hover:bg-teal-600 transition-colors"
-            >
-              Registrarse
-            </Link>
-          </div>
+
+          {!currentUser && (
+            <div className="flex flex-col absolute top-[calc(80px+100%)] left-0 w-full bg-white p-4 shadow-md z-50 gap-2">
+              <Link
+                to="/login"
+                className="px-4 py-2 border-2 border-teal-500 text-teal-500 font-semibold rounded text-center hover:bg-teal-500 hover:text-white transition-colors"
+              >
+                Iniciar Sesión
+              </Link>
+              <Link
+                to="/register"
+                className="px-4 py-2 bg-teal-500 text-white font-semibold rounded text-center hover:bg-teal-600 transition-colors"
+              >
+                Registrarse
+              </Link>
+            </div>
+          )}
         </div>
       )}
     </header>
@@ -169,4 +211,3 @@ function Header() {
 }
 
 export default Header
-

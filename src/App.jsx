@@ -1,24 +1,72 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+import { AuthProvider } from "./context/AuthProvider"
+import ProtectedRoute from "./components/ProtectedRoute"
 import Home from "./pages/Home"
 import Login from "./pages/Login"
 import Register from "./pages/Register"
 import Faq from "./pages/Faq"
-import Profile from "./pages/Profile"
-import Messages from "./pages/Messages"
-import Search from "./pages/Search"
+import Perfil from "./pages/Profile"
+import Mensajes from "./pages/Messages"
+import Buscar from "./pages/Search"
+import ProducerComingSoon from "./pages/ProducerComingSoon"
 
 function App() {
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/faq" element={<Faq />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/messages" element={<Messages />} />
-        <Route path="/search" element={<Search />} />
-      </Routes>
+      <AuthProvider>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route
+            path="/producer-coming-soon"
+            element={
+              <ProtectedRoute>
+                <ProducerComingSoon />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/faq"
+            element={
+              <ProtectedRoute>
+                <Faq />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/perfil"
+            element={
+              <ProtectedRoute>
+                <Perfil />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/mensajes"
+            element={
+              <ProtectedRoute>
+                <Mensajes />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/buscar"
+            element={
+              <ProtectedRoute>
+                <Buscar />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </AuthProvider>
     </Router>
   )
 }

@@ -45,7 +45,7 @@ function ProviderCard({ provider }) {
         </div>
         <p className="text-gray-600 mb-6">{provider.description}</p>
         <div className="flex gap-4">
-          <Link to="/messages">
+          <Link to="/mensajes">
             <Button>Contactar</Button>
           </Link>
           <Button variant="outline">Ver Perfil</Button>

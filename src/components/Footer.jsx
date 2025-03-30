@@ -28,17 +28,17 @@ function Footer() {
                   </Link>
                 </li>
                 <li className="mb-3">
-                  <Link to="/search" className="text-gray-300 hover:text-teal-400 transition-colors">
+                  <Link to="/buscar" className="text-gray-300 hover:text-teal-400 transition-colors">
                     Buscar Proveedores
                   </Link>
                 </li>
                 <li className="mb-3">
-                  <Link to="/profile" className="text-gray-300 hover:text-teal-400 transition-colors">
+                  <Link to="/perfil" className="text-gray-300 hover:text-teal-400 transition-colors">
                     Mi Perfil
                   </Link>
                 </li>
                 <li className="mb-3">
-                  <Link to="/messages" className="text-gray-300 hover:text-teal-400 transition-colors">
+                  <Link to="/mensajes" className="text-gray-300 hover:text-teal-400 transition-colors">
                     Mensajes
                   </Link>
                 </li>

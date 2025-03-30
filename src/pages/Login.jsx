@@ -3,27 +3,54 @@
 import { useState } from "react"
 import { Link } from "react-router-dom"
 import { Mail, Lock } from "lucide-react"
+import { useAuth } from "../context/useAuth"
 import CustomAlert from "../components/CustomAlert"
 
 function Login() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [showAlert, setShowAlert] = useState(false)
+  const [alertData, setAlertData] = useState({
+    title: "",
+    message: "",
+    icon: "",
+    redirectUrl: "",
+  })
 
-  const handleSubmit = (e) => {
+  const { login } = useAuth()
+
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log("Intento de inicio de sesión:", { email, password })
-    setShowAlert(true)
+
+    const result = await login(email, password)
+
+    if (result.success) {
+      setAlertData({
+        title: "Inicio de Sesión Exitoso",
+        message: "Bienvenido de nuevo a CaféConnect. Redirigiendo...",
+        icon: "check-circle",
+        redirectUrl: "/",
+      })
+      setShowAlert(true)
+    } else {
+      setAlertData({
+        title: "Error de Inicio de Sesión",
+        message: result.error || "Credenciales inválidas. Por favor, intenta nuevamente.",
+        icon: "alert-circle",
+        redirectUrl: "",
+      })
+      setShowAlert(true)
+    }
   }
 
   return (
     <div className="min-h-screen bg-gray-100 py-12">
       {showAlert && (
         <CustomAlert
-          title="Inicio de Sesión Exitoso"
-          message="Bienvenido de nuevo a CaféCollect. Redirigiendo..."
-          icon="check-circle"
-          redirectUrl="/"
+          title={alertData.title}
+          message={alertData.message}
+          icon={alertData.icon}
+          redirectUrl={alertData.redirectUrl}
         />
       )}
 
@@ -35,7 +62,7 @@ function Login() {
               alt="Logo"
               className="h-[50px] mr-2.5"
             />
-            <h1 className="text-2xl font-bold text-teal-500">CaféCollect</h1>
+            <h1 className="text-2xl font-bold text-teal-500">CaféConnect</h1>
           </Link>
         </div>
 
