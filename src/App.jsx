@@ -9,6 +9,8 @@ import Perfil from "./pages/Perfil"
 import Mensajes from "./pages/Mensajes"
 import Buscar from "./pages/Buscar"
 import ProducerComingSoon from "./pages/ProducerComingSoon"
+import ProductorInicio from "./pages/Producer"
+import ProductorPerfil from "./pages/ProducerPerfil"
 
 function App() {
   return (
@@ -25,6 +27,8 @@ function App() {
           />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/productorview" element={<ProductorInicio />} />
+          <Route path="/productorprofile" element={<ProductorPerfil />} />
           <Route
             path="/producer-coming-soon"
             element={
