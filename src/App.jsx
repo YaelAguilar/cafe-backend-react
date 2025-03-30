@@ -13,6 +13,15 @@ import ProductorInicio from "./pages/Producer";
 import ProductorPerfil from "./pages/ProducerPerfil";
 import ProviderProfileView from "./pages/ProviderProfileView";
 import NotFound from "./pages/NotFound";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+import Home from "./pages/Home"
+import Login from "./pages/Login"
+import Register from "./pages/Register"
+import Faq from "./pages/Faq"
+import Profile from "./pages/Profile"
+import Messages from "./pages/Messages"
+import Search from "./pages/Search"
+import MessagesP from "./pages/MessagesProductor"
 
 function App() {
   return (
@@ -104,6 +113,16 @@ function App() {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </AuthProvider>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/faq" element={<Faq />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/messages" element={<Messages />} />
+        <Route path="/search" element={<Search />} />
+        <Route path="/messagesProductor" element={<MessagesP/>} />
+      </Routes>
     </Router>
   );
 }
