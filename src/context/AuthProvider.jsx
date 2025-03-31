@@ -2,10 +2,8 @@
 
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import axios from "axios"
 import { AuthContext } from "./AuthContextCore"
-
-const API_URL = "http://localhost:2010/api"
+import { authService } from "../services/auth"
 
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null)
@@ -17,21 +15,19 @@ export const AuthProvider = ({ children }) => {
     // Verificar si hay un token almacenado
     const token = localStorage.getItem("token")
     if (token) {
-      fetchUserProfile(token)
+      fetchUserProfile()
     } else {
       setLoading(false)
     }
   }, [])
 
-  const fetchUserProfile = async (token) => {
+  const fetchUserProfile = async () => {
     try {
       setLoading(true)
-      const response = await axios.get(`${API_URL}/users/profile`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
+      const response = await authService.getProfile()
 
-      if (response.data.success) {
-        setCurrentUser(response.data.user)
+      if (response.success) {
+        setCurrentUser(response.user)
       } else {
         // Si hay un error, limpiar el token
         localStorage.removeItem("token")
@@ -51,11 +47,10 @@ export const AuthProvider = ({ children }) => {
       setLoading(true)
       setError(null)
 
-      const response = await axios.post(`${API_URL}/users/register`, userData)
+      const response = await authService.register(userData)
 
-      if (response.data.success) {
-        const { token, user } = response.data
-        localStorage.setItem("token", token)
+      if (response.success) {
+        const { user } = response
         setCurrentUser(user)
 
         // Redirigir según el tipo de usuario
@@ -67,6 +62,7 @@ export const AuthProvider = ({ children }) => {
 
         return { success: true }
       }
+      return { success: false, error: response.message || "Error al registrar usuario" }
     } catch (error) {
       console.error("Registration error:", error)
       setError(error.response?.data?.message || "Error al registrar usuario")
@@ -81,11 +77,10 @@ export const AuthProvider = ({ children }) => {
       setLoading(true)
       setError(null)
 
-      const response = await axios.post(`${API_URL}/users/login`, { email, password })
+      const response = await authService.login(email, password)
 
-      if (response.data.success) {
-        const { token, user } = response.data
-        localStorage.setItem("token", token)
+      if (response.success) {
+        const { user } = response
         setCurrentUser(user)
 
         // Redirigir según el tipo de usuario
@@ -97,6 +92,7 @@ export const AuthProvider = ({ children }) => {
 
         return { success: true }
       }
+      return { success: false, error: response.message || "Credenciales inválidas" }
     } catch (error) {
       console.error("Login error:", error)
       setError(error.response?.data?.message || "Credenciales inválidas")
@@ -109,21 +105,9 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       setLoading(true)
-
-      // Llamar al endpoint de logout
-      const token = localStorage.getItem("token")
-      if (token) {
-        await axios.post(
-          `${API_URL}/users/logout`,
-          {},
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          },
-        )
-      }
-
+      await authService.logout()
+      
       // Limpiar datos locales
-      localStorage.removeItem("token")
       setCurrentUser(null)
       navigate("/login")
 

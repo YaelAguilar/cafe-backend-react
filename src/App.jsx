@@ -1,19 +1,27 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthProvider";
-import ProtectedRoute from "./components/ProtectedRoute";
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Faq from "./pages/Faq";
-import Perfil from "./pages/Perfil";
-import Mensajes from "./pages/Mensajes";
-import Buscar from "./pages/Buscar";
-import ProducerComingSoon from "./pages/ProducerComingSoon";
-import ProductorInicio from "./pages/Producer";
-import ProductorPerfil from "./pages/ProducerPerfil";
-import ProviderProfileView from "./pages/ProviderProfileView";
-import MerchantInterested from "./pages/MerchantInterested"; // Importa la nueva vista
-import NotFound from "./pages/NotFound";
+import ProtectedRoute from "./components/common/layout/ProtectedRoute";
+
+// Páginas de autenticación
+import Login from "./pages/auth/Login";
+import Register from "./pages/auth/Register";
+
+// Páginas de comerciante
+import Home from "./pages/merchant/Home";
+import Buscar from "./pages/merchant/Buscar";
+import Perfil from "./pages/merchant/Perfil";
+import Mensajes from "./pages/merchant/Mensajes";
+import Faq from "./pages/merchant/Faq";
+import ProviderProfileView from "./pages/merchant/ProviderProfileView";
+
+// Páginas de productor
+import Producer from "./pages/producer/Producer";
+import ProducerPerfil from "./pages/producer/ProducerPerfil";
+import ProducerComingSoon from "./pages/producer/ProducerComingSoon";
+import MerchantInterested from "./pages/producer/MerchantInterested";
+
+// Página 404
+import NotFound from "./pages/common/NotFound";
 
 function App() {
   return (
@@ -75,7 +83,7 @@ function App() {
             path="/productorview"
             element={
               <ProtectedRoute allowedUserTypes={["producer"]}>
-                <ProductorInicio />
+                <Producer />
               </ProtectedRoute>
             }
           />
@@ -83,7 +91,7 @@ function App() {
             path="/productorprofile"
             element={
               <ProtectedRoute allowedUserTypes={["producer"]}>
-                <ProductorPerfil />
+                <ProducerPerfil />
               </ProtectedRoute>
             }
           />
