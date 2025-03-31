@@ -12,6 +12,7 @@ import ProducerComingSoon from "./pages/ProducerComingSoon";
 import ProductorInicio from "./pages/Producer";
 import ProductorPerfil from "./pages/ProducerPerfil";
 import ProviderProfileView from "./pages/ProviderProfileView";
+import MerchantInterested from "./pages/MerchantInterested"; // Importa la nueva vista
 import NotFound from "./pages/NotFound";
 
 function App() {
@@ -60,7 +61,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-          {/* Nueva ruta para ver el perfil de proveedor */}
           <Route
             path="/provider/:id"
             element={
@@ -92,6 +92,15 @@ function App() {
             element={
               <ProtectedRoute allowedUserTypes={["producer"]}>
                 <ProducerComingSoon />
+              </ProtectedRoute>
+            }
+          />
+          {/* Nueva ruta para que productores vean comerciantes interesados */}
+          <Route
+            path="merchant-interested"
+            element={
+              <ProtectedRoute allowedUserTypes={["producer"]}>
+                <MerchantInterested />
               </ProtectedRoute>
             }
           />

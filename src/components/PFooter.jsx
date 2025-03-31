@@ -28,7 +28,7 @@ const PFooter = () => {
                   ["Inicio", "productorview"],
                   ["Mi Perfil", "productorprofile"],
                   ["Mis Lotes", "productor-lotes.html"],
-                  ["Comerciantes", "productor-comerciantes.html"],
+                  ["Comerciantes", "merchant-interested"],
                   ["Mensajes", "productor-mensajes.html"],
                 ],
               },

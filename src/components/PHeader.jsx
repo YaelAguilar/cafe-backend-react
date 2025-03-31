@@ -65,7 +65,7 @@ const PHeader = () => {
             </li>
             <li className="mx-4">
               <a
-                href="productor-comerciantes.html"
+                href="merchant-interested"
                 className="text-gray-800 font-medium hover:text-teal-500 relative after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:h-0.5 after:bg-teal-500 after:transition-all hover:after:w-full"
               >
                 Comerciantes
@@ -163,7 +163,7 @@ const PHeader = () => {
             </li>
             <li className="py-2">
               <a
-                href="productor-comerciantes.html"
+                href="merchant-interested"
                 className="text-gray-800 font-medium hover:text-teal-500"
               >
                 Comerciantes
