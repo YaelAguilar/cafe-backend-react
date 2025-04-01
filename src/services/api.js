@@ -99,6 +99,42 @@ export const userService = {
     });
     return response.data;
   },
+  
+  getMerchantById: async (id) => {
+    const response = await api.get(`/merchants/${id}`);
+    return response.data;
+  },
+  
+  // Solicitudes de contacto
+  createContactRequest: async (receiverId) => {
+    const response = await api.post('/contact-requests', { receiverId });
+    return response.data;
+  },
+  
+  updateContactRequestStatus: async (requestId, status) => {
+    const response = await api.put(`/contact-requests/${requestId}`, { status });
+    return response.data;
+  },
+  
+  getSentRequests: async () => {
+    const response = await api.get('/contact-requests/sent');
+    return response.data;
+  },
+  
+  getReceivedRequests: async () => {
+    const response = await api.get('/contact-requests/received');
+    return response.data;
+  },
+  
+  getConnections: async () => {
+    const response = await api.get('/contact-requests/connections');
+    return response.data;
+  },
+  
+  checkContactRequestStatus: async (targetId) => {
+    const response = await api.get(`/contact-requests/check/${targetId}`);
+    return response.data;
+  }
 };
 
 export default api;
